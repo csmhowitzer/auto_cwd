@@ -1,0 +1,300 @@
+*auto_cwd.txt*    Automatic working directory management for Neovim
+
+Author: auto_cwd.nvim
+License: MIT
+
+==============================================================================
+CONTENTS                                                    *auto_cwd-contents*
+
+1. Introduction ............................ |auto_cwd-introduction|
+2. Installation ............................ |auto_cwd-installation|
+3. Configuration ........................... |auto_cwd-configuration|
+4. Functions ............................... |auto_cwd-functions|
+5. Languages ............................... |auto_cwd-languages|
+6. Debugging ............................... |auto_cwd-debugging|
+7. Examples ................................ |auto_cwd-examples|
+
+==============================================================================
+1. INTRODUCTION                                         *auto_cwd-introduction*
+
+auto_cwd.nvim provides automatic working directory management for Neovim.
+Intelligently switches to project root directories based on file types and
+configurable root indicators.
+
+Features:
+- Language-aware detection for C#, Go, Frontend, Python, Rust, and Obsidian
+- Configurable root detection patterns and priorities
+- Opt-in design - all languages disabled by default
+- Cached filesystem searches for performance
+- Runtime language control (enable/disable on the fly)
+- Comprehensive debug mode with detailed logging
+
+==============================================================================
+2. INSTALLATION                                        *auto_cwd-installation*
+
+Using lazy.nvim:
+
+>lua
+    {
+      dir = "~/plugins/auto_cwd.nvim",
+      name = "auto_cwd",
+      build = ":helptags doc",
+      config = function()
+        require("auto_cwd").setup({
+          enabled_languages = { "csharp", "golang", "frontend" },
+          cache_enabled = true,
+          debug = false,
+        })
+      end,
+    }
+<
+
+==============================================================================
+3. CONFIGURATION                                      *auto_cwd-configuration*
+
+Basic setup:
+
+>lua
+    require("auto_cwd").setup({
+      enabled_languages = { "csharp", "golang", "obsidian" },
+      cache_enabled = true,
+      fallback_to_git = false,
+      debug = false,
+    })
+<
+
+Custom language configuration:
+
+>lua
+    require("auto_cwd").setup({
+      enabled_languages = { "csharp", "custom_lang" },
+      custom_languages = {
+        custom_lang = {
+          patterns = { "*.custom" },
+          root_indicators = { "custom.config", ".custom" },
+          priority = { "custom.config", ".custom" },
+          description = "Custom language support"
+        }
+      },
+      cache_enabled = true,
+      debug = false,
+    })
+<
+
+Configuration Options:
+- `enabled_languages` (table): List of languages to enable (default: {})
+- `cache_enabled` (boolean): Enable filesystem search caching (default: true)
+- `fallback_to_git` (boolean): Fall back to git root if no language match (default: false)
+- `debug` (boolean): Enable debug notifications (default: false)
+- `custom_languages` (table): Define custom language configurations (default: {})
+
+==============================================================================
+4. FUNCTIONS                                              *auto_cwd-functions*
+
+`auto_cwd.setup()`                                          *auto_cwd.setup()*
+
+Set up the plugin with configuration options.
+
+`opts` is a table with the following key-values:
+- **enabled_languages**: (table) list of language names to enable
+- **cache_enabled**: (boolean) whether to cache filesystem searches
+- **fallback_to_git**: (boolean) whether to fall back to git root detection
+- **debug**: (boolean) whether to enable debug notifications
+- **custom_languages**: (table) custom language configuration definitions
+
+>lua
+    ---@param opts table?
+    require("auto_cwd").setup(opts)
+<
+
+Example:
+>lua
+    require("auto_cwd").setup({
+      enabled_languages = { "csharp", "golang" },
+      cache_enabled = true,
+      debug = false,
+    })
+<
+
+
+`auto_cwd.get_config()`                                  *auto_cwd.get_config()*
+
+Get the current configuration for debugging and inspection.
+
+>lua
+    ---@return table
+    require("auto_cwd").get_config()
+<
+
+Example:
+>lua
+    local config = require("auto_cwd").get_config()
+    print(vim.inspect(config))
+<
+
+
+`auto_cwd.enable_language()`                        *auto_cwd.enable_language()*
+
+Enable a language at runtime.
+
+>lua
+    ---@param lang_name string
+    require("auto_cwd").enable_language(lang_name)
+<
+
+Example:
+>lua
+    require("auto_cwd").enable_language("python")
+<
+
+
+`auto_cwd.disable_language()`                      *auto_cwd.disable_language()*
+
+Disable a language at runtime.
+
+>lua
+    ---@param lang_name string
+    require("auto_cwd").disable_language(lang_name)
+<
+
+Example:
+>lua
+    require("auto_cwd").disable_language("frontend")
+<
+
+
+`auto_cwd.detect_and_set_cwd()`                  *auto_cwd.detect_and_set_cwd()*
+
+Manually trigger CWD detection for the current buffer.
+
+>lua
+    ---@return boolean
+    require("auto_cwd").detect_and_set_cwd()
+<
+
+Example:
+>lua
+    local changed = require("auto_cwd").detect_and_set_cwd()
+    if changed then
+      print("Working directory changed")
+    end
+<
+
+
+`auto_cwd.clear_cache()`                                *auto_cwd.clear_cache()*
+
+Clear the filesystem search cache.
+
+>lua
+    require("auto_cwd").clear_cache()
+<
+
+Example:
+>lua
+    -- Clear cache if having issues with cached results
+    require("auto_cwd").clear_cache()
+<
+
+
+`auto_cwd.enable_debug()`                              *auto_cwd.enable_debug()*
+
+Enable debug mode at runtime.
+
+>lua
+    require("auto_cwd").enable_debug()
+<
+
+
+`auto_cwd.disable_debug()`                            *auto_cwd.disable_debug()*
+
+Disable debug mode at runtime.
+
+>lua
+    require("auto_cwd").disable_debug()
+<
+
+==============================================================================
+5. LANGUAGES                                              *auto_cwd-languages*
+
+Built-in language configurations:
+
+**C# (csharp)**
+- Patterns: `*.cs`
+- Root indicators: `*.sln`, `*.csproj` (prefers .sln)
+- Use case: .NET development with solution/project files
+
+**Go (golang)**  
+- Patterns: `*.go`
+- Root indicators: `go.work`, `go.mod` (prefers go.work)
+- Use case: Go development with modules and workspaces
+
+**Frontend (frontend)**
+- Patterns: `*.js`, `*.jsx`, `*.ts`, `*.tsx`, `*.vue`, `*.svelte`
+- Root indicators: `package.json`
+- Use case: JavaScript/TypeScript frontend development
+
+**Python (python)**
+- Patterns: `*.py`
+- Root indicators: `pyproject.toml`, `setup.py` (prefers pyproject.toml)
+- Use case: Python development with modern packaging
+
+**Rust (rust)**
+- Patterns: `*.rs`
+- Root indicators: `Cargo.toml`
+- Use case: Rust development with Cargo
+
+**Obsidian (obsidian)**
+- Patterns: `*.md`, `*.markdown`
+- Root indicators: `.obsidian`, `.git` (prefers .obsidian)
+- Use case: Obsidian vault management
+
+==============================================================================
+6. DEBUGGING                                              *auto_cwd-debugging*
+
+Enable debug mode for detailed logging:
+
+>lua
+    require("auto_cwd").setup({ debug = true })
+<
+
+Or enable at runtime:
+
+>lua
+    require("auto_cwd").enable_debug()
+<
+
+Debug output shows:
+- File pattern matching
+- Root indicator searches
+- CWD changes with reasons
+- Cache hits and misses
+
+Example debug output:
+>
+    auto_cwd DEBUG: BufEnter triggered for golang - file: /path/main.go
+    auto_cwd DEBUG: pattern matched! Looking for project root...
+    auto_cwd DEBUG: found root with indicator go.mod at: /path/project
+    auto_cwd DEBUG: changing CWD from /old/path to /path/project
+<
+
+==============================================================================
+7. EXAMPLES                                                *auto_cwd-examples*
+
+**C# Development:**
+Opening `MyProject/src/Program.cs` finds `MyProject/MyProject.sln` and sets
+CWD to `MyProject/` so `dotnet` commands work correctly.
+
+**Go Development:**
+Opening `myapp/cmd/main.go` finds `myapp/go.mod` and sets CWD to `myapp/`
+so `go build` works correctly.
+
+**Frontend Development:**
+Opening `webapp/src/App.tsx` finds `webapp/package.json` and sets CWD to
+`webapp/` so `npm` commands work correctly.
+
+**Obsidian Notes:**
+Opening `MyVault/Notes/daily.md` finds `MyVault/.obsidian/` and sets CWD to
+`MyVault/` for proper vault context.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,17 @@
+auto_cwd-configuration	auto_cwd.txt	/*auto_cwd-configuration*
+auto_cwd-contents	auto_cwd.txt	/*auto_cwd-contents*
+auto_cwd-debugging	auto_cwd.txt	/*auto_cwd-debugging*
+auto_cwd-examples	auto_cwd.txt	/*auto_cwd-examples*
+auto_cwd-functions	auto_cwd.txt	/*auto_cwd-functions*
+auto_cwd-installation	auto_cwd.txt	/*auto_cwd-installation*
+auto_cwd-introduction	auto_cwd.txt	/*auto_cwd-introduction*
+auto_cwd-languages	auto_cwd.txt	/*auto_cwd-languages*
+auto_cwd.clear_cache()	auto_cwd.txt	/*auto_cwd.clear_cache()*
+auto_cwd.detect_and_set_cwd()	auto_cwd.txt	/*auto_cwd.detect_and_set_cwd()*
+auto_cwd.disable_debug()	auto_cwd.txt	/*auto_cwd.disable_debug()*
+auto_cwd.disable_language()	auto_cwd.txt	/*auto_cwd.disable_language()*
+auto_cwd.enable_debug()	auto_cwd.txt	/*auto_cwd.enable_debug()*
+auto_cwd.enable_language()	auto_cwd.txt	/*auto_cwd.enable_language()*
+auto_cwd.get_config()	auto_cwd.txt	/*auto_cwd.get_config()*
+auto_cwd.setup()	auto_cwd.txt	/*auto_cwd.setup()*
+auto_cwd.txt	auto_cwd.txt	/*auto_cwd.txt*
