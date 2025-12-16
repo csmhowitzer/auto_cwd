@@ -4,12 +4,12 @@ Automatic working directory management for Neovim. Intelligently switches to pro
 
 ## Features
 
-- 🎯 **Language-aware**: Supports C#, Go, Frontend (JS/TS), Python, Rust, and Obsidian out of the box
-- ⚙️ **Configurable**: Easy to add custom languages and root detection patterns
-- 🚀 **Opt-in**: All languages disabled by default - you choose what to enable
-- 🚄 **Cached**: Filesystem searches are cached for performance
-- 🔧 **Runtime control**: Enable/disable languages on the fly
-- 🐛 **Debug mode**: Comprehensive logging to understand when and why CWD changes occur
+- **Language-aware**: Supports C#, Go, Frontend (JS/TS), Python, Rust, and Obsidian out of the box
+- **Configurable**: Easy to add custom languages and root detection patterns
+- **Opt-in**: All languages disabled by default - you choose what to enable
+- **Cached**: Filesystem searches are cached for performance
+- **Runtime control**: Enable/disable languages on the fly
+- **Debug mode**: Comprehensive logging to understand when and why CWD changes occur
 
 ## Installation
 
@@ -202,26 +202,3 @@ require("auto_cwd").clear_cache()
 -- Manually trigger CWD detection for current buffer
 require("auto_cwd").detect_and_set_cwd()
 ```
-
-## Testing
-
-The plugin includes a comprehensive test suite using plenary.nvim. To run tests:
-
-```vim
--- Run all tests
-:PlenaryBustedDirectory tests
-
--- Run individual test modules
-:PlenaryBustedFile tests/auto_cwd/config_spec.lua
-:PlenaryBustedFile tests/auto_cwd/setup_spec.lua
-:PlenaryBustedFile tests/auto_cwd/detector_spec.lua
-:PlenaryBustedFile tests/auto_cwd/autocmds_spec.lua
-:PlenaryBustedFile tests/auto_cwd/init_spec.lua
-```
-
-**Requirements for testing:**
-- [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
-
-## License
-
-MIT
